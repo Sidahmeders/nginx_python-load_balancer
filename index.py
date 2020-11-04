@@ -1,21 +1,21 @@
 import tornado.ioloop
 import tornado.web
-import sys
 import os
+import sys
 
-class basicRequestHandler(tornado.web.RequestHandler):
+class MainHandler(tornado.web.RequestHandler):
     def get(self):
-        self.write(f"Serverd from {os.getpid()}")
+        self.write(f"Served from {os.getpid()}")
 
+application = tornado.web.Application([
+    (r"/", MainHandler),
+])
+
+port = 8888
 if __name__ == "__main__":
-    app = tornado.web.Application([
-        (r"/basic", basicRequestHandler)
-    ])
+    if (sys.argv.__len__() > 1):
+        port = sys.argv[1]
 
-port = 8882
-if (sys.argv.__len__() > 1):
-    port = sys.argv[1]
-
-app.listen(port)
-print(f"Application is ready and listening on port {port}")
-tornado.ioloop.IOLoop.current().start()
+    application.listen(port)
+    print(f"Application is ready and listening on port {port}")
+    tornado.ioloop.IOLoop.instance().start()
